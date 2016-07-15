@@ -9,8 +9,11 @@ import java.util.List;
  *
  */
 public interface ContactOperator {
-	public void addContact(Contact contact); //add new contact
-	public void updateContact(Contact contact); //update contacts
-	public void deleteContact(String id); //delete contact
-	public List<Contact> showAll(); //show all contacts
+	public void addContact(Contact contact); // add new contact
+
+	public void updateContact(Contact contact); // update contacts
+
+	public void deleteContact(String id); // delete contact
+
+	public List<Contact> showAll(); // show all contacts
 }

@@ -3,10 +3,10 @@ package com.yang.contact;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.util.List;
 
 /**
- * 主程序
+ * main program
  * 
  * @author yang
  *
@@ -24,20 +24,91 @@ public class MainProgram {
 			 */
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			ContactOperator operator = new ContactOperatorImpl();
-			//user can use it repeatedly
+			// user can use it repeatedly
 			while (true) {
 				String command = br.readLine();
 
 				// 3. execute different operations
 				if (command.equals("1")) {
-					
+					Contact contact = new Contact();
+					// Get id
+					System.out.println("please input your ID:");
+					String id = br.readLine();
+					// Get name
+					System.out.println("please input your Name:");
+					String name = br.readLine();
+					// Get age
+					System.out.println("please input your Age:");
+					int age = Integer.parseInt(br.readLine());
+					// Get gender
+					System.out.println("please input your gender:");
+					String gender = br.readLine();
+					// Get phone
+					System.out.println("please input your phone number:");
+					String phone = br.readLine();
+					// Get email
+					System.out.println("please input your email:");
+					String email = br.readLine();
+					// Get qq
+					System.out.println("please input your QQ number:");
+					String qq = br.readLine();
+
+					// set contact
+					contact.setId(id);
+					contact.setName(name);
+					contact.setAge(age);
+					contact.setGender(gender);
+					contact.setPhone(phone);
+					contact.setEmail(email);
+					contact.setQq(qq);
+
+					// execute
 					operator.addContact(contact);
 				} else if (command.equals("2")) {
+					Contact contact = new Contact();
+					// Get id
+					System.out.println("please input your updated ID:");
+					String id = br.readLine();
+					// Get name
+					System.out.println("please input your updated Name:");
+					String name = br.readLine();
+					// Get age
+					System.out.println("please input your updated Age:");
+					int age = Integer.parseInt(br.readLine());
+					// Get gender
+					System.out.println("please input your updated gender:");
+					String gender = br.readLine();
+					// Get phone
+					System.out.println("please input your updated phone number:");
+					String phone = br.readLine();
+					// Get email
+					System.out.println("please input your updated email:");
+					String email = br.readLine();
+					// Get qq
+					System.out.println("please input your updated QQ number:");
+					String qq = br.readLine();
+
+					// set contact
+					contact.setId(id);
+					contact.setName(name);
+					contact.setAge(age);
+					contact.setGender(gender);
+					contact.setPhone(phone);
+					contact.setEmail(email);
+					contact.setQq(qq);
+
+					// execute
 					operator.updateContact(contact);
 				} else if (command.equals("3")) {
+					System.out.println("Please input the id you want to delete:");
+					String id = br.readLine();
+
 					operator.deleteContact(id);
 				} else if (command.equals("4")) {
-					operator.showAll();
+					List<Contact> list = operator.showAll();
+					for (Contact con : list) {
+						System.out.println(con);
+					}
 				} else if (command.equals("Q") || command.equals("q")) {
 					break;
 				} else {

@@ -1,18 +1,12 @@
 package com.yang.contact;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
 
 /**
  * implement all operations
@@ -40,7 +34,7 @@ public class ContactOperatorImpl implements ContactOperator {
 				rootElem = doc.addElement("contactList");
 			} else {
 				// if exist, read in the file
-				doc = new SAXReader().read(file);
+				doc = XMLUtil.getDocument();
 				// if exist, read in root element
 				rootElem = doc.getRootElement();
 			}
@@ -61,11 +55,7 @@ public class ContactOperatorImpl implements ContactOperator {
 			contactElem.addElement("qq").setText(contact.getQq());
 
 			// write document to xml file
-			FileOutputStream out = new FileOutputStream("/home/yang/Desktop/contact.xml");
-			OutputFormat format = OutputFormat.createPrettyPrint();
-			XMLWriter writer = new XMLWriter(out, format);
-			writer.write(doc);
-			writer.close();
+			XMLUtil.writeToXml(doc);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -81,10 +71,21 @@ public class ContactOperatorImpl implements ContactOperator {
 		 * update contact by tracing id value
 		 */
 		try {
-			// read in xml file
-			Document doc = new SAXReader().read(new File("/home/yang/Desktop/contact.xml"));
+			// 1.read in xml file
+			Document doc = XMLUtil.getDocument();
 			Element contactElem = (Element) doc.selectSingleNode("//contact[@id='" + contact.getId() + "']");
-			
+
+			// 2.update tag content
+			contactElem.element("name").setText(contact.getName());
+			contactElem.element("gender").setText(contact.getGender());
+			contactElem.element("age").setText(contact.getAge() + "");
+			contactElem.element("phone").setText(contact.getPhone());
+			contactElem.element("email").setText(contact.getEmail());
+			contactElem.element("qq").setText(contact.getQq());
+
+			// 3. write in xml file
+			XMLUtil.writeToXml(doc);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -93,14 +94,51 @@ public class ContactOperatorImpl implements ContactOperator {
 
 	@Override
 	public void deleteContact(String id) {
-		// TODO Auto-generated method stub
+		/**
+		 * delete contact
+		 */
+		try {
+			// 1.read in xml file
+			Document doc = XMLUtil.getDocument();
+			// 2.search contact
+			Element contactElem = (Element) doc.selectSingleNode("//contact[@id='" + id + "']");
+			// delete contact
+			contactElem.detach();
+
+			// 3. write in xml file
+			XMLUtil.writeToXml(doc);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 
 	}
 
 	@Override
 	public List<Contact> showAll() {
-		// TODO Auto-generated method stub
-		return null;
+		// 1.read in xml file
+		Document doc = XMLUtil.getDocument();
+
+		// 2.create list object
+		List<Contact> list = new ArrayList<Contact>();
+		// 3. read in contact tag
+		List<Element> conList = (List<Element>) doc.selectNodes("//contact");
+		for (Element e : conList) {
+			// create contact object
+			Contact c = new Contact();
+			c.setId(e.attributeValue("id"));
+			c.setName(e.elementText("name"));
+			c.setGender(e.elementText("gender"));
+			c.setAge(Integer.parseInt(e.elementText("age")));
+			c.setPhone(e.elementText("phone"));
+			c.setEmail(e.elementText("email"));
+			c.setQq(e.elementText("qq"));
+			// put contact into list
+			list.add(c);
+		}
+
+		return list;
 	}
 
 }
